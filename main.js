@@ -1,5 +1,5 @@
 var Ship1 = new Image();
-Ship1.src = 'ship1.png'
+Ship1.src = 'Ship1.png'
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 var HEIGHT = 640;

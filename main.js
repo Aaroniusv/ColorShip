@@ -69,7 +69,7 @@ var Player =
     if (color == "red" && Player.LaserPower > 0 && Player.isShooting)
     {
 
-      if (Player.Collider == false)
+      if ( !Player.Collider() )
       {
         ctx.beginPath();
         ctx.moveTo(Player.x+15,Player.y);
@@ -78,7 +78,7 @@ var Player =
         ctx.lineWidth = 3;
         ctx.stroke();
       }
-      else if (Player.Collider)
+      else if (Player.Collider())
       {
           ctx.beginPath();
           ctx.moveTo(Player.x+15,Player.y);
@@ -179,8 +179,6 @@ render = function()
   //Enemy.y += .3;
   Enemy.DrawCircle();
   Player.ShootLaser(Player.LaserColor);
-  //Player.LaserColor = null;
-  //console.log(Player.LaserPower);
   requestAnimationFrame(render);
 }
 

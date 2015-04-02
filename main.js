@@ -5,6 +5,10 @@ var ctx = canvas.getContext('2d');
 var HEIGHT = 640;
 var WIDTH = 480;
 var keys = [];
+var post = document.getElementById('StartButton');
+var intro = document.getElementById('instructions');
+var powerMeter = document.getElementById('meter');
+
 window.addEventListener("keydown", function(e) {
     keys[e.keyCode] = true;
 });
@@ -12,9 +16,7 @@ window.addEventListener("keyup", function(e) {
     keys[e.keyCode] = false;
     Player.isShooting = false;
     //Player.LaserColor = "black";
-
 });
-
 var Enemy =
 {
   x: this.x || Math.random() * WIDTH,
@@ -47,15 +49,14 @@ var Enemy =
     }
     if (!this.isAlive)
     {
-
       this.x = Math.random() * WIDTH;
       this.y =  Math.random() * HEIGHT / 3;
       this.isAlive = true;
-      this.speed += .05
+      this.speed += .05;
+      Player.speed += .1
+      this.hp = 100;
     }
-
-
-  },
+},
   checkHP: function(hp)
   {
     hp = this.hp;
@@ -65,27 +66,20 @@ var Enemy =
     {
       if (ifHit && color == "red")
       {
-          this.hp -= 3;
-
+          this.hp -= 4;
       }
       if (ifHit && color == "green")
       {
           this.hp -= 1;
-
       }
       if (ifHit && color == "violet")
       {
           this.hp -= 15;
-
       }
     } else if (this.hp <= 0)
     {
       Enemy.isAlive = false;
     }
-
-
-
-
   },
 };
 
@@ -98,13 +92,11 @@ var Player =
   LaserColor: this.LaserColor || "red",
   LaserPower: this.LaserPower || 1000,
   ScoredHit: this.ScoredHit || false,
-  isAlive: function(playerISAlive)
+  speed: this.speed || 3,
+  isAlive: function()
   {
     if (Enemy.y > 600)
     {
-      playerISAlive = false;
-
-
       ctx.font="60px Verdana";
       // Create gradient
       var gradient=ctx.createLinearGradient(0,0,WIDTH,0);
@@ -122,24 +114,16 @@ var Player =
         ctx.strokeStyle = '#003300';
         ctx.stroke();
       }
-
+        post.style.display = 'block'; // to show
 
     } else
     {
-      playerISAlive = true;
+      post.style.display = 'none'; // to hide
     }
   },
   DrawPlayer: function()
 	{
-    if (this.isAlive)
-    {
       ctx.drawImage(Ship1,Player.x,Player.y,30,30);
-    }
-    else if (!this.isAlive)
-    {
-
-    }
-
 	},
   Collider: function(laser,enemy)
   {
@@ -163,7 +147,7 @@ var Player =
         ctx.moveTo(Player.x+15,Player.y);
         ctx.lineTo(Player.x+15,0);
         ctx.strokeStyle = 'red';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 4;
         ctx.stroke();
       }
       else if (Player.Collider())
@@ -172,7 +156,7 @@ var Player =
           ctx.moveTo(Player.x+15,Player.y);
           ctx.lineTo(Player.x+15,Enemy.y);
           ctx.strokeStyle = 'red';
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 4;
           ctx.stroke();
           Enemy.checkHP();
       }
@@ -196,7 +180,7 @@ var Player =
         ctx.moveTo(Player.x+15,Player.y);
         ctx.lineTo(Player.x+15,Enemy.y);
         ctx.strokeStyle = 'green';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2;
         ctx.stroke();
         Enemy.checkHP();
       }
@@ -217,7 +201,7 @@ var Player =
        ctx.moveTo(Player.x+15,Player.y);
        ctx.lineTo(Player.x+15,Enemy.y);
        ctx.strokeStyle = 'violet';
-       ctx.lineWidth = 3;
+       ctx.lineWidth = 10;
        ctx.stroke();
        Enemy.checkHP();
      }
@@ -242,23 +226,23 @@ var canvasHelper =
 function update(mod)
 {
 	if(keys[39]){
-		Player.x += 3;
+		Player.x += Player.speed;
 	}
 	if(keys[37]){
-		Player.x -= 3;
+		Player.x -= Player.speed;
 	}
 	if(keys[38]){
-		Player.y -= 3;
+		Player.y -= Player.speed;
 	}
 	if(keys[40]){
-		Player.y += 3;
+		Player.y += Player.speed;
 	}
   if(keys[65]){
 
     if (Player.LaserPower > 0)
     {
       Player.LaserColor = "red";
-      Player.LaserPower -= 6;
+      Player.LaserPower -= 2;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }
@@ -269,7 +253,7 @@ function update(mod)
     if (Player.LaserPower > 0)
     {
       Player.LaserColor = "green";
-      Player.LaserPower -= 3;
+      //Player.LaserPower -= 1;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }
@@ -279,7 +263,7 @@ function update(mod)
     if (Player.LaserPower > 0)
     {
       Player.LaserColor = "violet";
-      Player.LaserPower -= 9;
+      Player.LaserPower -= 5;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }
@@ -300,15 +284,25 @@ render = function()
 
 function main()
 {
-  render();
 
+  render();
   setInterval(function () {
     if (Player.LaserPower < 1000)
     {
       Player.LaserPower ++;
     }
-
     document.getElementById('power').innerHTML = Player.LaserPower;
   }, 10);
+}
+function init()
+{
+  Enemy.y = 100;
+  Enemy.speed = .2;
+  Player.isAlive();
+  intro.style.display = 'none'; // to hide
+  powerMeter.style.display = 'block';
+
+  main();
+
 
 }

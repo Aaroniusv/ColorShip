@@ -2,14 +2,34 @@
   <head>
     <title>Defender</title>
   </head>
-<h1>A - Red laser (medium) || S - Green Laser (weak) || D - Purple Laser (strong)</h1>
-  <body onload="main()">
+  <style>
+    body {background-color:lightgray}
+    p    {
+          color:green
+          font-family:courier;
+          font-size:160%;
+          }
 
+  </style>
+  <p id="instructions" font size="20">
+    Spheres are attacking your homeworld.
+    <br>
+    Use your lasers to blast them.
+    <br>
+    Arrow keys to move.
+    <br>
+    For Lasers use :
+    <br>
+    A - Red laser (medium) || S - Green Laser (weak) || D - Purple Laser (strong)
+
+  </p>
+  <body>
+
+    <input id="StartButton" type="button" value="Start Game" onclick="init();" style="height:50px; width:150px; background-color: #E3E1B8;"  />
     <script src="main.js" type="text/javascript" charset="utf-8" async defer></script>
-
   </body>
-  <div>Power </div>
-  <div id = "power"> </div>
+  <div id="meter" style ="display: none">Power </div>
+  <div id = "power" > </div>
   <canvas id="canvas" width="480" height="640"></canvas>
 
 </html>

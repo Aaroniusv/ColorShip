@@ -15,7 +15,7 @@ window.addEventListener("keydown", function(e) {
 window.addEventListener("keyup", function(e) {
     keys[e.keyCode] = false;
     Player.isShooting = false;
-    //Player.LaserColor = "black";
+    Player.vibe = 100;
 });
 var Enemy =
 {
@@ -93,6 +93,7 @@ var Player =
   LaserPower: this.LaserPower || 1000,
   ScoredHit: this.ScoredHit || false,
   speed: this.speed || 3,
+  vibe: this.vibe || 100,
   isAlive: function()
   {
     if (Enemy.y > 600)
@@ -136,17 +137,18 @@ var Player =
        return false;
      }
   },
+
   ShootLaser: function(color)
   {
     if (color == "red" && Player.LaserPower > 0 && Player.isShooting)
     {
+      ctx.strokeStyle="rgb(" + Player.vibe + ",0,0)";
 
       if ( !Player.Collider() )
       {
         ctx.beginPath();
         ctx.moveTo(Player.x+15,Player.y);
         ctx.lineTo(Player.x+15,0);
-        ctx.strokeStyle = 'red';
         ctx.lineWidth = 4;
         ctx.stroke();
       }
@@ -155,22 +157,20 @@ var Player =
           ctx.beginPath();
           ctx.moveTo(Player.x+15,Player.y);
           ctx.lineTo(Player.x+15,Enemy.y);
-          ctx.strokeStyle = 'red';
           ctx.lineWidth = 4;
           ctx.stroke();
           Enemy.checkHP();
       }
-
-
     }
      else if (color == "green" && Player.LaserPower > 0 && Player.isShooting)
     {
+      ctx.strokeStyle="rgb(0," + Player.vibe + ",0)";
+
       if (!Player.Collider())
       {
       ctx.beginPath();
       ctx.moveTo(Player.x+15,Player.y);
       ctx.lineTo(Player.x+15,0);
-      ctx.strokeStyle = "green";
       ctx.lineWidth = 2;
       ctx.stroke();
       }
@@ -179,19 +179,19 @@ var Player =
         ctx.beginPath();
         ctx.moveTo(Player.x+15,Player.y);
         ctx.lineTo(Player.x+15,Enemy.y);
-        ctx.strokeStyle = 'green';
         ctx.lineWidth = 2;
         ctx.stroke();
         Enemy.checkHP();
       }
     }else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
    {
+     ctx.strokeStyle="rgb(" + Player.vibe + ",0," + Player.vibe + ")";
+
      if (!Player.Collider())
      {
        ctx.beginPath();
        ctx.moveTo(Player.x+15,Player.y);
        ctx.lineTo(Player.x+15,0);
-       ctx.strokeStyle = "violet";
        ctx.lineWidth = 10;
        ctx.stroke();
      }
@@ -200,7 +200,6 @@ var Player =
        ctx.beginPath();
        ctx.moveTo(Player.x+15,Player.y);
        ctx.lineTo(Player.x+15,Enemy.y);
-       ctx.strokeStyle = 'violet';
        ctx.lineWidth = 10;
        ctx.stroke();
        Enemy.checkHP();
@@ -212,8 +211,6 @@ var Player =
   },
 
 };
-
-
 var canvasHelper =
 {
 	drawMap: function()
@@ -222,7 +219,6 @@ var canvasHelper =
 		ctx.fillRect(0,0,WIDTH,HEIGHT);
 	}
 };
-
 function update(mod)
 {
 	if(keys[39]){
@@ -242,6 +238,7 @@ function update(mod)
     if (Player.LaserPower > 0)
     {
       Player.LaserColor = "red";
+      Player.vibe += 3;
       Player.LaserPower -= 2;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
@@ -252,7 +249,9 @@ function update(mod)
 
     if (Player.LaserPower > 0)
     {
+
       Player.LaserColor = "green";
+      Player.vibe += 3;
       //Player.LaserPower -= 1;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
@@ -264,6 +263,7 @@ function update(mod)
     {
       Player.LaserColor = "violet";
       Player.LaserPower -= 5;
+      Player.vibe += 3;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }

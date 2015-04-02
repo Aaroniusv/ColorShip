@@ -20,25 +20,68 @@ var Enemy =
   x: this.x || HEIGHT / 2,
   y: this.y || WIDTH / 2,
   radius: 20,
+  hp: this.hp || 100,
+  isAlive: this.isAlive || true,
   DrawCircle: function()
   {
-    var color = Math.floor(Math.random() * 3) + 1
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-    if (color = 1)
+    if (Enemy.isAlive)
     {
-      ctx.fillStyle = 'green';
-    }if (color = 2)
-    {
-      ctx.fillStyle = 'red';
-    }if (color = 3)
-    {
-      ctx.fillStyle = 'purple';
+      var color = Math.floor(Math.random() * 3) + 1
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+      if (color = 1)
+      {
+        ctx.fillStyle = 'green';
+      }if (color = 2)
+      {
+        ctx.fillStyle = 'red';
+      }if (color = 3)
+      {
+        ctx.fillStyle = 'purple';
+      }
+      ctx.fill();
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = '#003300';
+      ctx.stroke();
     }
-    ctx.fill();
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = '#003300';
-    ctx.stroke();
+    if (!Enemy.isAlive)
+    {
+      Enemy.x = null;
+      Enemy.y = null;
+    }
+
+
+  },
+  checkHP: function(hp)
+  {
+    hp = this.hp;
+    ifHit = Player.Collider();
+    color = Player.LaserColor;
+    if (this.hp > 0)
+    {
+      if (ifHit && color == "red")
+      {
+          this.hp -= 3;
+
+      }
+      if (ifHit && color == "green")
+      {
+          this.hp -= 1;
+
+      }
+      if (ifHit && color == "violet")
+      {
+          this.hp -= 15;
+
+      }
+    } else if (this.hp <= 0)
+    {
+      Enemy.isAlive = false;
+    }
+
+
+
+
   },
 };
 
@@ -49,13 +92,14 @@ var Player =
   isShooting: this.isShooting || false,
   LaserColor: this.LaserColor || "red",
   LaserPower: this.LaserPower || 1000,
+  ScoredHit: this.ScoredHit || false,
   DrawPlayer: function()
 	{
 		ctx.drawImage(Ship1,Player.x,Player.y,30,30);
 	},
   Collider: function(laser,enemy)
   {
-     if (Enemy.x - Player.x <= 40 && Player.x - Enemy.x <=40 )
+     if (Enemy.x - Player.x <= 40 && Player.x - Enemy.x <=2 )
      {
        return true;
      }
@@ -86,26 +130,53 @@ var Player =
           ctx.strokeStyle = 'red';
           ctx.lineWidth = 3;
           ctx.stroke();
+          Enemy.checkHP();
       }
 
 
     }
      else if (color == "green" && Player.LaserPower > 0 && Player.isShooting)
     {
+      if (!Player.Collider())
+      {
       ctx.beginPath();
       ctx.moveTo(Player.x+15,Player.y);
       ctx.lineTo(Player.x+15,0);
       ctx.strokeStyle = "green";
       ctx.lineWidth = 2;
       ctx.stroke();
+      }
+      else if (Player.Collider())
+      {
+        ctx.beginPath();
+        ctx.moveTo(Player.x+15,Player.y);
+        ctx.lineTo(Player.x+15,Enemy.y);
+        ctx.strokeStyle = 'green';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        Enemy.checkHP();
+      }
     }else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
    {
-     ctx.beginPath();
-     ctx.moveTo(Player.x+15,Player.y);
-     ctx.lineTo(Player.x+15,0);
-     ctx.strokeStyle = "violet";
-     ctx.lineWidth = 10;
-     ctx.stroke();
+     if (!Player.Collider())
+     {
+       ctx.beginPath();
+       ctx.moveTo(Player.x+15,Player.y);
+       ctx.lineTo(Player.x+15,0);
+       ctx.strokeStyle = "violet";
+       ctx.lineWidth = 10;
+       ctx.stroke();
+     }
+     else if(Player.Collider())
+     {
+       ctx.beginPath();
+       ctx.moveTo(Player.x+15,Player.y);
+       ctx.lineTo(Player.x+15,Enemy.y);
+       ctx.strokeStyle = 'violet';
+       ctx.lineWidth = 3;
+       ctx.stroke();
+       Enemy.checkHP();
+     }
    }
     else
     {
@@ -179,6 +250,7 @@ render = function()
   //Enemy.y += .3;
   Enemy.DrawCircle();
   Player.ShootLaser(Player.LaserColor);
+
   requestAnimationFrame(render);
 }
 

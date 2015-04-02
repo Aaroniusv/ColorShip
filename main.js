@@ -17,14 +17,15 @@ window.addEventListener("keyup", function(e) {
 
 var Enemy =
 {
-  x: this.x || HEIGHT / 2,
-  y: this.y || WIDTH / 2,
+  x: this.x || Math.random() * WIDTH,
+  y: this.y || Math.random() * HEIGHT / 3 ,
   radius: 20,
   hp: this.hp || 100,
+  speed: this.speed || 2,
   isAlive: this.isAlive || true,
   DrawCircle: function()
   {
-    if (Enemy.isAlive)
+    if (this.isAlive)
     {
       var color = Math.floor(Math.random() * 3) + 1
       ctx.beginPath();
@@ -44,10 +45,13 @@ var Enemy =
       ctx.strokeStyle = '#003300';
       ctx.stroke();
     }
-    if (!Enemy.isAlive)
+    if (!this.isAlive)
     {
-      Enemy.x = null;
-      Enemy.y = null;
+
+      this.x = Math.random() * WIDTH;
+      this.y =  Math.random() * HEIGHT / 3;
+      this.isAlive = true;
+      this.speed += .05
     }
 
 
@@ -89,13 +93,53 @@ var Player =
 {
   x: this.x || 300,
   y: this.y || 300,
+  radius: this.radius || 10,
   isShooting: this.isShooting || false,
   LaserColor: this.LaserColor || "red",
   LaserPower: this.LaserPower || 1000,
   ScoredHit: this.ScoredHit || false,
+  isAlive: function(playerISAlive)
+  {
+    if (Enemy.y > 600)
+    {
+      playerISAlive = false;
+
+
+      ctx.font="60px Verdana";
+      // Create gradient
+      var gradient=ctx.createLinearGradient(0,0,WIDTH,0);
+      gradient.addColorStop("0","magenta");
+      gradient.addColorStop("0.5","blue");
+      gradient.addColorStop("1.0","red");
+      // Fill with gradient
+      ctx.fillStyle=gradient;
+      ctx.fillText("Game Over!",10,90);
+      for (var i = 0; i < 10; i++) {
+        ctx.beginPath();
+        ctx.arc(this.x+15, this.y+15, this.radius += .3, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = '#003300';
+        ctx.stroke();
+      }
+
+
+    } else
+    {
+      playerISAlive = true;
+    }
+  },
   DrawPlayer: function()
 	{
-		ctx.drawImage(Ship1,Player.x,Player.y,30,30);
+    if (this.isAlive)
+    {
+      ctx.drawImage(Ship1,Player.x,Player.y,30,30);
+    }
+    else if (!this.isAlive)
+    {
+
+    }
+
 	},
   Collider: function(laser,enemy)
   {
@@ -247,10 +291,10 @@ render = function()
 	update(null);
   canvasHelper.drawMap();
   Player.DrawPlayer();
-  //Enemy.y += .3;
+  Enemy.y += Enemy.speed;
   Enemy.DrawCircle();
   Player.ShootLaser(Player.LaserColor);
-
+  Player.isAlive();
   requestAnimationFrame(render);
 }
 

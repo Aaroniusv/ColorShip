@@ -76,7 +76,11 @@ var Enemy =
       }
       if (ifHit && color == "violet")
       {
-          this.hp -= Player.vibe / 9;
+          this.hp -= Player.vibe / 11;
+      }
+      if (ifHit && color == "superG")
+      {
+          this.hp -= Player.vibe / 5;
       }
     } else if (this.hp <= 0)
     {
@@ -96,6 +100,9 @@ var Player =
   ScoredHit: this.ScoredHit || false,
   speed: this.speed || 3,
   vibe: this.vibe || 100,
+  vibe2: this.vibe2 || 20,
+  laserTime: this.laserTime || 0,
+  superGBuild: this.superGBuild || 0,
   isAlive: function()
   {
     if (Enemy.y > 600)
@@ -143,8 +150,6 @@ var Player =
   {
     if (color == "red" && Player.LaserPower > 0 && Player.isShooting)
     {
-
-
       if ( !Player.Collider() )
       {
         ctx.beginPath();
@@ -185,10 +190,13 @@ var Player =
         ctx.lineWidth = 2;
         ctx.strokeStyle="rgb(0," + Player.vibe + ",0)";
         ctx.stroke();
-        Player.LaserPower += 1;
+        this.LaserPower += 1;
+        this.SuperGBuild += .2;
+
         Enemy.checkHP();
       }
-    }else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
+    }
+    else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
    {
      if (!Player.Collider())
      {
@@ -197,7 +205,6 @@ var Player =
        ctx.lineTo(Player.x+15,0);
        ctx.lineWidth = 10;
        ctx.strokeStyle="rgb(" + Player.vibe + ",30," + Player.vibe + ")";
-
        ctx.stroke();
      }
      else if(Player.Collider())
@@ -207,13 +214,19 @@ var Player =
        ctx.lineTo(Player.x+15,Enemy.y);
        ctx.lineWidth = 10;
        ctx.strokeStyle="rgb(" + Player.vibe + ",30," + Player.vibe + ")";
-
        ctx.stroke();
        Enemy.checkHP();
      }
    }
-    else
+    else if (color == "superG" && Player.Collider())
     {
+      ctx.beginPath();
+      ctx.moveTo(Player.x+15,Player.y);
+      ctx.lineTo(Player.x+15,Enemy.y);
+      ctx.lineWidth = 10;
+      ctx.strokeStyle="rgb(0," + Player.vibe + ",20)";
+      ctx.stroke();
+      Enemy.checkHP();
     }
   },
 };
@@ -225,7 +238,15 @@ var canvasHelper =
 		ctx.fillRect(0,0,WIDTH,HEIGHT);
 	}
 };
+function updateSuperLaser()
+{
+  if(Player.SuperGBuild >= 50)
+  {
+    Player.LaserColor = "superG";
+    console.log("super laser enabled");
+  }
 
+}
 function update(mod)
 {
 	if(keys[39])
@@ -259,25 +280,21 @@ function update(mod)
   {
     Player.vibe = 100;
   }
-
   else if(keys[83])
   {
-
     if (Player.LaserPower > 0)
     {
-      Player.isShooting = true;
-      Player.LaserColor = "green";
-      Player.vibe += 3;
-      document.getElementById('power').innerHTML = Player.LaserPower;
+        Player.isShooting = true;
+        Player.LaserColor = "green";
+        Player.vibe += 3;
+        document.getElementById('power').innerHTML = Player.LaserPower;
     }
 	} else if(keysup[83])
   {
     Player.vibe = 100;
   }
-
   else if(keys[68])
   {
-
     if (Player.LaserPower > 0)
     {
       Player.isShooting = true;
@@ -291,11 +308,12 @@ function update(mod)
     Player.vibe = 100;
   }
 }
+
 render = function()
 {
 	ctx.clearRect(0,0,WIDTH,HEIGHT);
-
 	update(null);
+  updateSuperLaser();
   canvasHelper.drawMap();
   Player.DrawPlayer();
   Enemy.y += Enemy.speed;
@@ -319,6 +337,7 @@ function init()
 {
   Enemy.y = 100;
   Enemy.speed = .2;
+  Player.SuperGBuild = 0;
   Player.isAlive();
   intro.style.display = 'none'; // to hide
   powerMeter.style.display = 'block';

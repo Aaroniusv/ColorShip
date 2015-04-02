@@ -5,6 +5,7 @@ var ctx = canvas.getContext('2d');
 var HEIGHT = 640;
 var WIDTH = 480;
 var keys = [];
+var keysup = [];
 var post = document.getElementById('StartButton');
 var intro = document.getElementById('instructions');
 var powerMeter = document.getElementById('meter');
@@ -12,11 +13,15 @@ var powerMeter = document.getElementById('meter');
 window.addEventListener("keydown", function(e) {
     keys[e.keyCode] = true;
 });
+
 window.addEventListener("keyup", function(e) {
     keys[e.keyCode] = false;
     Player.isShooting = false;
-    Player.vibe = 100;
 });
+window.addEventListener("keyup", function(e) {
+    keysup[e.keyCode] = true;
+});
+
 var Enemy =
 {
   x: this.x || Math.random() * WIDTH,
@@ -185,7 +190,7 @@ var Player =
       }
     }else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
    {
-     ctx.strokeStyle="rgb(" + Player.vibe + ",0," + Player.vibe + ")";
+     ctx.strokeStyle="rgb(" + Player.vibe + ",30," + Player.vibe + ")";
 
      if (!Player.Collider())
      {
@@ -233,6 +238,7 @@ function update(mod)
 	if(keys[40]){
 		Player.y += Player.speed;
 	}
+
   if(keys[65]){
 
     if (Player.LaserPower > 0)
@@ -243,20 +249,29 @@ function update(mod)
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }
-
 	}
+  else if(keysup[65])
+  {
+    Player.vibe = 100;
+  }
+
+
+
   if(keys[83]){
 
     if (Player.LaserPower > 0)
     {
-
       Player.LaserColor = "green";
       Player.vibe += 3;
-      //Player.LaserPower -= 1;
+      Player.LaserPower += 1;
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }
 	}
+  else if(keysup[83])
+  {
+    Player.vibe = 100;
+  }
   if(keys[68]){
 
     if (Player.LaserPower > 0)
@@ -268,6 +283,10 @@ function update(mod)
       Player.isShooting = true;
     }
 	}
+  else if(keysup[68])
+  {
+    Player.vibe = 100;
+  }
 }
 render = function()
 {

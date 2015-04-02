@@ -9,11 +9,9 @@ var keysup = [];
 var post = document.getElementById('StartButton');
 var intro = document.getElementById('instructions');
 var powerMeter = document.getElementById('meter');
-
 window.addEventListener("keydown", function(e) {
     keys[e.keyCode] = true;
 });
-
 window.addEventListener("keyup", function(e) {
     keys[e.keyCode] = false;
     Player.isShooting = false;
@@ -142,7 +140,6 @@ var Player =
        return false;
      }
   },
-
   ShootLaser: function(color)
   {
     if (color == "red" && Player.LaserPower > 0 && Player.isShooting)
@@ -191,7 +188,6 @@ var Player =
     }else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
    {
      ctx.strokeStyle="rgb(" + Player.vibe + ",30," + Player.vibe + ")";
-
      if (!Player.Collider())
      {
        ctx.beginPath();
@@ -214,7 +210,6 @@ var Player =
     {
     }
   },
-
 };
 var canvasHelper =
 {
@@ -254,9 +249,6 @@ function update(mod)
   {
     Player.vibe = 100;
   }
-
-
-
   if(keys[83]){
 
     if (Player.LaserPower > 0)
@@ -300,10 +292,8 @@ render = function()
   Player.isAlive();
   requestAnimationFrame(render);
 }
-
 function main()
 {
-
   render();
   setInterval(function () {
     if (Player.LaserPower < 1000)
@@ -320,8 +310,5 @@ function init()
   Player.isAlive();
   intro.style.display = 'none'; // to hide
   powerMeter.style.display = 'block';
-
   main();
-
-
 }

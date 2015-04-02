@@ -17,8 +17,6 @@ window.addEventListener("keyup", function(e) {
     Player.isShooting = false;
     keysup[e.keyCode] = true;
 });
-
-
 var Enemy =
 {
   x: this.x || Math.random() * WIDTH,
@@ -88,7 +86,6 @@ var Enemy =
     }
   },
 };
-
 var Player =
 {
   x: this.x || 300,
@@ -192,7 +189,6 @@ var Player =
         ctx.stroke();
         this.LaserPower += 1;
         this.SuperGBuild += .2;
-
         Enemy.checkHP();
       }
     }
@@ -218,15 +214,28 @@ var Player =
        Enemy.checkHP();
      }
    }
-    else if (color == "superG" && Player.Collider())
+    else if (color == "superG" && Player.isShooting)
     {
-      ctx.beginPath();
-      ctx.moveTo(Player.x+15,Player.y);
-      ctx.lineTo(Player.x+15,Enemy.y);
-      ctx.lineWidth = 10;
-      ctx.strokeStyle="rgb(0," + Player.vibe + ",20)";
-      ctx.stroke();
-      Enemy.checkHP();
+      if (!Player.Collider())
+      {
+        ctx.beginPath();
+        ctx.moveTo(Player.x+15,Player.y);
+        ctx.lineTo(Player.x+15,0);
+        ctx.lineWidth = 20;
+        ctx.strokeStyle="rgb(0," + Player.vibe + ",20)";
+        ctx.stroke();
+        Enemy.checkHP();
+      }
+      else if(Player.Collider())
+      {
+        ctx.beginPath();
+        ctx.moveTo(Player.x+15,Player.y);
+        ctx.lineTo(Player.x+15,Enemy.y);
+        ctx.lineWidth = 20;
+        ctx.strokeStyle="rgb(0," + Player.vibe + ",20)";
+        ctx.stroke();
+        Enemy.checkHP();
+      }
     }
   },
 };

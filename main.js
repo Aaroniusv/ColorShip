@@ -183,6 +183,7 @@ var Player =
         ctx.lineTo(Player.x+15,Enemy.y);
         ctx.lineWidth = 2;
         ctx.stroke();
+        Player.LaserPower += 1;
         Enemy.checkHP();
       }
     }else if (color == "violet" && Player.LaserPower > 0 && Player.isShooting)
@@ -255,7 +256,7 @@ function update(mod)
     {
       Player.LaserColor = "green";
       Player.vibe += 3;
-      Player.LaserPower += 1;
+
       document.getElementById('power').innerHTML = Player.LaserPower;
       Player.isShooting = true;
     }

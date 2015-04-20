@@ -3,33 +3,32 @@
     <title>Defender</title>
   </head>
   <style>
-    body {background-color:lightgray}
+    body {}
     p    {
-          color:green
           font-family:courier;
           font-size:160%;
           }
 
   </style>
-  <p id="instructions" font size="20">
-    Spheres are attacking your homeworld.
-    <br>
-    Use your lasers to blast them.
-    <br>
-    Spheres will gain speed as they are destroyed, but so will you.
-    <br>
-    <br>
-    <br>
-    Arrow keys to move.
-    <br>
-    For Lasers use :
-    <br>
-    A - Red laser (medium) || S - Green Laser (weak) || D - Purple Laser (strong)
 
-  </p>
   <body>
+    <p id="instructions" font size="20" font color=#66FF66 >
+      Spheres are attacking your homeworld.
+      <br>
+      Use your lasers to blast them.
+      <br>
+      Spheres will gain speed as they are destroyed, but so will you.
+      <br>
+      <br>
+      <br>
+      Arrow keys to move.
+      <br>
+      For Lasers use :
+      <br>
+      A - Red laser (medium) <br> S - Green Laser (weak) <br> D - Purple Laser (strong)
 
-    <input id="StartButton" type="button" value="Start Game" onclick="init();" style="height:50px; width:150px; background-color: #E3E1B8;"  />
+    </p>
+    <input id="StartButton" type="button" value="Start Game" onclick="init();" style="height:50px; width:150px; background-color: #66FF66;"  />
     <script src="main.js" type="text/javascript" charset="utf-8" async defer></script>
   </body>
   <div id="meter" style ="display: none">Power </div>
